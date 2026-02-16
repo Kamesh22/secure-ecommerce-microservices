@@ -326,8 +326,7 @@ curl -X POST http://localhost:8083/api/orders \
     "items": [
       {
         "productId": 1,
-        "quantity": 2,
-        "price": 29.99
+        "quantity": 2
       }
     ],
     "paymentSuccess": true

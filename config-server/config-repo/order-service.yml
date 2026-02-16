@@ -57,8 +57,11 @@ management:
     health:
       show-details: always
   info:
+    build:
+      enabled: true
     java:
       enabled: true
+    
 
 springdoc:
   api-docs:
@@ -78,11 +81,11 @@ logging:
     org.springframework.web: INFO
 
 # Application Configuration Properties
-info:
-  app:
-    name: Order Service
-    description: Handles order lifecycle and payment flow
-    version: 1.0.0
+# info:
+#   app:
+#     name: Order Service
+#     description: Handles order lifecycle and payment flow
+#     version: 1.0.0
 
 app:
   openapi:

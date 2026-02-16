@@ -57,6 +57,8 @@ management:
     health:
       show-details: always
   info:
+    build:
+      enabled: true
     java:
       enabled: true
 

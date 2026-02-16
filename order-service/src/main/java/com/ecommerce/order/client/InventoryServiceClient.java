@@ -3,96 +3,88 @@ package com.ecommerce.order.client;
 import com.ecommerce.common.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+
+import java.time.Duration;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class InventoryServiceClient {
 
-    private final WebClient webClient;
+    private final WebClient.Builder webClientBuilder;  
 
-    @Value("${app.inventory-service.url:http://localhost:8082}")
-    private String inventoryServiceUrl;
+    private static final Duration TIMEOUT = Duration.ofSeconds(10);
 
     /**
-     * Reserve stock for order items
+     * Reserve stock
      */
     public InventoryResponse reserveStock(Long productId, Integer quantity) {
-        log.info("Reserving {} units for product ID: {}", quantity, productId);
-
         InventoryReserveRequest request = InventoryReserveRequest.builder()
                 .productId(productId)
                 .quantity(quantity)
                 .build();
 
-        try {
-            return webClient
-                    .post()
-                    .uri(inventoryServiceUrl + "/api/inventory/reserve")
-                    .bodyValue(request)
-                    .retrieve()
-                    .bodyToMono(InventoryResponse.class)
-                    .doOnError(error -> log.error("Error reserving stock: {}", error.getMessage()))
-                    .block();
-        } catch (Exception e) {
-            log.error("Failed to reserve stock for product ID: {}", productId, e);
-            throw new BusinessException("Failed to reserve stock for product ID: " + productId);
-        }
+        return callInventoryApi("/api/inventory/reserve", request, "reserve", productId);
     }
 
     /**
-     * Release reserved stock
+     * Release stock
      */
     public InventoryResponse releaseStock(Long productId, Integer quantity) {
-        log.info("Releasing {} units for product ID: {}", quantity, productId);
-
         InventoryReleaseRequest request = InventoryReleaseRequest.builder()
                 .productId(productId)
                 .quantity(quantity)
                 .build();
 
-        try {
-            return webClient
-                    .post()
-                    .uri(inventoryServiceUrl + "/api/inventory/release")
-                    .bodyValue(request)
-                    .retrieve()
-                    .bodyToMono(InventoryResponse.class)
-                    .doOnError(error -> log.error("Error releasing stock: {}", error.getMessage()))
-                    .block();
-        } catch (Exception e) {
-            log.error("Failed to release stock for product ID: {}", productId, e);
-            throw new BusinessException("Failed to release stock for product ID: " + productId);
-        }
+        return callInventoryApi("/api/inventory/release", request, "release", productId);
     }
 
     /**
-     * Confirm reserved stock (permanent deduction)
+     * Confirm stock
      */
     public InventoryResponse confirmStock(Long productId, Integer quantity) {
-        log.info("Confirming {} units for product ID: {}", quantity, productId);
-
         InventoryConfirmRequest request = InventoryConfirmRequest.builder()
                 .productId(productId)
                 .quantity(quantity)
                 .build();
 
-        try {
-            return webClient
-                    .post()
-                    .uri(inventoryServiceUrl + "/api/inventory/confirm")
-                    .bodyValue(request)
-                    .retrieve()
-                    .bodyToMono(InventoryResponse.class)
-                    .doOnError(error -> log.error("Error confirming stock: {}", error.getMessage()))
-                    .block();
-        } catch (Exception e) {
-            log.error("Failed to confirm stock for product ID: {}", productId, e);
-            throw new BusinessException("Failed to confirm stock for product ID: " + productId);
-        }
+        return callInventoryApi("/api/inventory/confirm", request, "confirm", productId);
+    }
+
+    /**
+     * Common WebClient executor
+     */
+    private InventoryResponse callInventoryApi(String path, Object body, String action, Long productId) {
+
+        log.info("Calling Inventory Service to {} stock for productId={}", action, productId);
+
+        return webClientBuilder.build()
+                .post()
+                .uri("lb://inventory-service" + path) 
+                .header("X-Internal-Call", "ORDER_SERVICE")
+                .header("X-User-Roles", "INTERNAL")
+                .bodyValue(body)
+                .retrieve()
+                //handle HTTP errors
+                .onStatus(HttpStatusCode::isError, response ->
+                        response.bodyToMono(String.class)
+                                .flatMap(errorBody -> {
+                                    log.error("Inventory service error: {}", errorBody);
+                                    return Mono.error(new BusinessException(
+                                            "Inventory service failed during " + action +
+                                                    " for product " + productId));
+                                })
+                )
+                .bodyToMono(InventoryResponse.class)
+                .timeout(TIMEOUT)
+                .doOnError(error ->
+                        log.error("Error during {} stock for productId={}: {}",
+                                action, productId, error.getMessage())
+                )
+                .block();
     }
 }

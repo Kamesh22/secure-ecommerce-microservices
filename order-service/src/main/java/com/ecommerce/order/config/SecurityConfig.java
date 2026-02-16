@@ -62,9 +62,10 @@ public class SecurityConfig {
                                 "/actuator/health",
                                 "/actuator/info"
                         ).permitAll()
+                        .requestMatchers("/api/**").permitAll() //todo remove this and secure APIs
                         .anyRequest().authenticated()
-                )
-                .addFilterBefore(new RoleExtractionFilter(), UsernamePasswordAuthenticationFilter.class);
+                );
+                //.addFilterBefore(new RoleExtractionFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

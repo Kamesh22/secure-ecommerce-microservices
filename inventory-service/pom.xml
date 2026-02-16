@@ -74,12 +74,6 @@
             <artifactId>postgresql</artifactId>
         </dependency>
 
-        <!-- Flyway for Database Migration -->
-        <dependency>
-            <groupId>org.flywaydb</groupId>
-            <artifactId>flyway-core</artifactId>
-        </dependency>
-
         <!-- Swagger / OpenAPI -->
         <dependency>
             <groupId>org.springdoc</groupId>

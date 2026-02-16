@@ -23,7 +23,4 @@ public class OrderItemDTO {
     @Positive(message = "Quantity must be positive")
     private Integer quantity;
 
-    @NotNull(message = "Price cannot be null")
-    @Positive(message = "Price must be positive")
-    private BigDecimal price;
 }
