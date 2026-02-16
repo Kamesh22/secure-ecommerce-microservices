@@ -1,0 +1,18 @@
+spring:
+  config:
+    activate:
+      on-profile: prod
+  cloud:
+    config:
+      server:
+        git:
+          enabled: true
+          uri: https://github.com/Kamesh22/microservices-config-repo.git 
+          default-label: main
+          clone-on-start: true
+        native:
+          enabled: false
+
+eureka:
+  instance:
+    preferIpAddress: false

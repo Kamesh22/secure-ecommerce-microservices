@@ -1,0 +1,16 @@
+spring:
+  config:
+    activate:
+      on-profile: dev
+  cloud:
+    config:
+      server:
+        native:
+          enabled: true
+          search-locations: file:config-repo/
+        git:
+          enabled: false
+
+eureka:
+  instance:
+    preferIpAddress: true

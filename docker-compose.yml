@@ -1,0 +1,55 @@
+services:
+
+  postgres:
+    image: bitnami/postgresql:latest
+    container_name: postgres-ms
+    restart: unless-stopped
+
+    environment:
+      POSTGRESQL_USERNAME: postgres
+      POSTGRESQL_PASSWORD: postgres
+      POSTGRESQL_POSTGRES_PASSWORD: postgres
+
+    ports:
+      - "5433:5432"
+
+    volumes:
+      - postgres_data:/bitnami/postgresql
+
+    networks:
+      - microservices-net
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d product_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin-ms
+    restart: unless-stopped
+
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+
+    ports:
+      - "5050:80"
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+    networks:
+      - microservices-net
+
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  microservices-net:
+    driver: bridge
