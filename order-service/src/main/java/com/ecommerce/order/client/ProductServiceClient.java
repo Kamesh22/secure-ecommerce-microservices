@@ -1,6 +1,8 @@
 package com.ecommerce.order.client;
 
 import com.ecommerce.common.exception.BusinessException;
+import com.ecommerce.order.client.dto.ProductResponse;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatusCode;

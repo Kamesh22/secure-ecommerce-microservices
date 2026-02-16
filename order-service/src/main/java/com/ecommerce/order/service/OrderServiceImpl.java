@@ -4,7 +4,7 @@ import com.ecommerce.common.exception.BusinessException;
 import com.ecommerce.common.exception.ResourceNotFoundException;
 import com.ecommerce.order.client.InventoryServiceClient;
 import com.ecommerce.order.client.ProductServiceClient;
-import com.ecommerce.order.client.ProductResponse;
+import com.ecommerce.order.client.dto.ProductResponse;
 import com.ecommerce.order.dto.OrderItemDTO;
 import com.ecommerce.order.dto.OrderRequestDTO;
 import com.ecommerce.order.dto.OrderResponseDTO;

@@ -1,4 +1,4 @@
-package com.ecommerce.order.client;
+package com.ecommerce.order.client.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;

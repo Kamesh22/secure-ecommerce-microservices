@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ecommerce.order.dto.OrderRequestDTO;
 import com.ecommerce.order.dto.OrderResponseDTO;
+import com.ecommerce.order.entity.OrderStatus;
 import com.ecommerce.order.service.OrderService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -49,7 +50,11 @@ public class OrderController {
 
         //Long userId = extractUserId(authentication);
         OrderResponseDTO response = orderService.placeOrder(userId, orderRequestDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        if (response.getStatus() == OrderStatus.PAID) {
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(response);
+        }
     }
 
     /**
