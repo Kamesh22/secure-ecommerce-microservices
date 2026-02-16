@@ -18,6 +18,13 @@
 
     <dependencies>
 
+        <!-- Common Library -->
+        <dependency>
+            <groupId>com.ecommerce</groupId>
+            <artifactId>common-lib</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
         <!-- Web (MVC) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
