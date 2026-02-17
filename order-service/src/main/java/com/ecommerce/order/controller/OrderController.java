@@ -39,7 +39,7 @@ public class OrderController {
      * USER API: Place a new order
      */
     @PostMapping
-    //@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @Operation(summary = "Place a new order",
             description = "Place a new order with items and payment status. User role required.")
     @Tag(name = "User")
@@ -48,7 +48,7 @@ public class OrderController {
             Authentication authentication) {
         log.info("POST /api/orders - Placing order");
 
-        //Long userId = extractUserId(authentication);
+        Long userId = extractUserId(authentication);
         OrderResponseDTO response = orderService.placeOrder(userId, orderRequestDTO);
         if (response.getStatus() == OrderStatus.PAID) {
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -61,7 +61,7 @@ public class OrderController {
      * USER API: Get my orders
      */
     @GetMapping("/my-orders")
-    //@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @Operation(summary = "Get my orders",
             description = "Retrieve all orders for the current user. User role required.")
     @Tag(name = "User")
@@ -69,24 +69,8 @@ public class OrderController {
             Authentication authentication) {
         log.info("GET /api/orders/my-orders - Fetching user orders");
 
-        //Long userId = extractUserId(authentication);
+        Long userId = extractUserId(authentication);
         List<OrderResponseDTO> response = orderService.getUserOrders(userId);
-        return ResponseEntity.ok(response);
-    }
-
-    /**
-     * USER API: Get order by ID
-     */
-    @GetMapping("/{id}")
-    //@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    @Operation(summary = "Get order by ID",
-            description = "Retrieve a specific order by its ID. User role required.")
-    @Tag(name = "User")
-    public ResponseEntity<OrderResponseDTO> getOrderById(
-            @PathVariable Long id) {
-        log.info("GET /api/orders/{} - Fetching order", id);
-
-        OrderResponseDTO response = orderService.getOrderById(id);
         return ResponseEntity.ok(response);
     }
 
@@ -94,7 +78,7 @@ public class OrderController {
      * ADMIN API: Get all orders
      */
     @GetMapping
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Get all orders",
             description = "Retrieve all orders in the system. Admin role required.")
     @Tag(name = "Admin")
@@ -109,7 +93,7 @@ public class OrderController {
      * ADMIN API: Cancel order
      */
     @PutMapping("/{id}/cancel")
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Cancel order",
             description = "Cancel an existing order and release reserved stock. Admin role required.")
     @Tag(name = "Admin")

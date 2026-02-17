@@ -42,6 +42,18 @@ public class RouteConfig {
                         .filters(f -> f.rewritePath(PREFIX + "/(?<segment>.*)", "/api/${segment}"))
                         .uri("lb://auth-service")
                 )
+
+                .route("auth-service", r -> r
+                .path("/api/v1/auth/**")
+                .filters(f -> f
+                        .rewritePath("/api/v1/auth/(?<segment>.*)", "/api/auth/${segment}")
+                        .circuitBreaker(c -> c
+                                .setName("authCircuitBreaker")
+                                .setFallbackUri("forward:/fallback/auth")
+                        )
+                )
+                .uri("lb://auth-service")
+                )
                 .build();
     }
 }

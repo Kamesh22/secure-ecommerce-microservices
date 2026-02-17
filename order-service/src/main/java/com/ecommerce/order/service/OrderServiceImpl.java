@@ -119,15 +119,6 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional(readOnly = true)
-    public OrderResponseDTO getOrderById(Long orderId) {
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new ResourceNotFoundException("Order not found with ID: " + orderId));
-
-        return orderMapper.orderToOrderResponseDTO(order);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
     public List<OrderResponseDTO> getUserOrders(Long userId) {
         return orderRepository.findByUserId(userId)
                 .stream()

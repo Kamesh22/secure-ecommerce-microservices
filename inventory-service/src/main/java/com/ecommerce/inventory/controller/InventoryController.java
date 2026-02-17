@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,7 +39,7 @@ public class InventoryController {
      * PUBLIC API
      */
     @GetMapping("/{productId}")
-    //@PreAuthorize("permitAll()")
+    @PreAuthorize("permitAll()")
     @Operation(summary = "Get inventory by product ID", 
             description = "Retrieve inventory details for a specific product. Public access allowed.")
     @Tag(name = "Public")
@@ -52,7 +53,7 @@ public class InventoryController {
      * ADMIN APIs
      */
     @PostMapping
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Create new inventory", 
             description = "Create a new inventory record for a product. Admin only.")
     @Tag(name = "Admin")
@@ -65,7 +66,7 @@ public class InventoryController {
     }
 
     @PutMapping("/{productId}")
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Update inventory", 
             description = "Update the available quantity for a product. Admin only.")
     @Tag(name = "Admin")
@@ -78,7 +79,7 @@ public class InventoryController {
     }
 
     @GetMapping
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(
         summary = "List all inventory",
         description = "Retrieve paginated inventory records. Admin only."
@@ -96,7 +97,7 @@ public class InventoryController {
      * INTERNAL API: Reserve stock for an order
      */
     @PostMapping("/reserve")
-    //@PreAuthorize("hasRole('ORDER_SERVICE')")
+    @PreAuthorize("hasRole('INTERNAL')")
     @Operation(summary = "Reserve stock", 
             description = "Reserve stock for an order. Internal use only (ORDER_SERVICE).")
     @Tag(name = "Internal")
@@ -109,7 +110,7 @@ public class InventoryController {
     }
 
     @PostMapping("/release")
-    //@PreAuthorize("hasRole('ORDER_SERVICE')")
+    @PreAuthorize("hasRole('INTERNAL')")
     @Operation(summary = "Release reserved stock", 
             description = "Release previously reserved stock (e.g., order cancellation). Internal use only (ORDER_SERVICE).")
     @Tag(name = "Internal")
@@ -122,7 +123,7 @@ public class InventoryController {
     }
 
     @PostMapping("/confirm")
-    //@PreAuthorize("hasRole('ORDER_SERVICE')")
+    @PreAuthorize("hasRole('INTERNAL')")
     @Operation(summary = "Confirm reserved stock", 
             description = "Confirm reserved stock (convert to permanent deduction). Internal use only (ORDER_SERVICE).")
     @Tag(name = "Internal")

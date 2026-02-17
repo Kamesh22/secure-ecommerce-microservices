@@ -14,11 +14,6 @@ public interface OrderService {
     OrderResponseDTO placeOrder(Long userId, OrderRequestDTO orderRequestDTO);
 
     /**
-     * Get order by ID
-     */
-    OrderResponseDTO getOrderById(Long orderId);
-
-    /**
      * Get all orders for a user
      */
     List<OrderResponseDTO> getUserOrders(Long userId);

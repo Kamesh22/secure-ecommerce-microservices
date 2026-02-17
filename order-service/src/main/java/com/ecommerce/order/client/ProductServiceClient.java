@@ -24,6 +24,8 @@ public class ProductServiceClient {
         return webClientBuilder.build()
                 .get()
                 .uri("lb://product-service/api/products/{id}", productId)
+                .header("X-User-Id", "SYSTEM")
+                .header("X-User-Roles", "INTERNAL")
                 .retrieve()
                 .onStatus(HttpStatusCode::isError, response ->
                         response.bodyToMono(String.class)

@@ -70,7 +70,7 @@ public class InventoryServiceClient {
         return webClientBuilder.build()
                 .post()
                 .uri("lb://inventory-service" + path) 
-                .header("X-Internal-Call", "ORDER_SERVICE")
+                .header("X-User-Id", "SYSTEM")
                 .header("X-User-Roles", "INTERNAL")
                 .bodyValue(body)
                 .retrieve()

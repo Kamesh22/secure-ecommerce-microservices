@@ -38,7 +38,7 @@ public class ProductController {
     private final ProductService productService;
 
     @PostMapping
-    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @Operation(summary = "Create a new product", description = "Create a new product (ADMIN only)")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Product created successfully"),
@@ -52,6 +52,7 @@ public class ProductController {
     }
 
     @GetMapping
+    @PreAuthorize("permitAll()")
     @Operation(summary = "Get all products", description = "Retrieve all products with pagination support")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Products retrieved successfully"),
@@ -66,6 +67,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("permitAll()")
     @Operation(summary = "Get product by ID", description = "Retrieve a specific product by its ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Product found"),
@@ -79,7 +81,7 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @Operation(summary = "Update product", description = "Update an existing product (ADMIN only)")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Product updated successfully"),
@@ -96,7 +98,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
-    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @Operation(summary = "Delete product", description = "Delete a product by ID (ADMIN only)")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Product deleted successfully"),
@@ -111,6 +113,7 @@ public class ProductController {
     }
 
     @GetMapping("/search")
+    @PreAuthorize("permitAll()")
     @Operation(summary = "Search products", description = "Search products by name (case-insensitive)")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Products found"),

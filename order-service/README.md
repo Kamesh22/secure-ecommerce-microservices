@@ -69,7 +69,6 @@ Plus: WebClient for Inventory Service calls
 ```
 POST   /api/orders               - Place a new order
 GET    /api/orders/my-orders     - Get current user's orders
-GET    /api/orders/{id}          - Get specific order
 ```
 
 ### Admin Endpoints (Role: ADMIN)

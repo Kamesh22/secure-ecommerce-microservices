@@ -87,8 +87,3 @@ app:
     description: API for managing orders and order lifecycle in the e-commerce microservices
   inventory-service:
     url: http://localhost:8082
-  cors:
-    allowed-origins: http://localhost:3000,http://localhost:8080
-    allowed-methods: GET,POST,PUT,DELETE,OPTIONS
-    allowed-headers: Content-Type,Authorization,X-User-Roles,X-User-Id,X-Internal-Call
-    allow-credentials: true
