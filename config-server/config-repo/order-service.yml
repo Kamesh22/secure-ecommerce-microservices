@@ -80,13 +80,6 @@ logging:
     org.springframework.security: DEBUG
     org.springframework.web: INFO
 
-# Application Configuration Properties
-# info:
-#   app:
-#     name: Order Service
-#     description: Handles order lifecycle and payment flow
-#     version: 1.0.0
-
 app:
   openapi:
     title: Order Service API
