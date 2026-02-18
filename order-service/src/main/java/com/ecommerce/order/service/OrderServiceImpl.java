@@ -4,6 +4,7 @@ import com.ecommerce.common.exception.BusinessException;
 import com.ecommerce.common.exception.ResourceNotFoundException;
 import com.ecommerce.order.client.InventoryServiceClient;
 import com.ecommerce.order.client.ProductServiceClient;
+import com.ecommerce.order.client.dto.InventoryResponse;
 import com.ecommerce.order.client.dto.ProductResponse;
 import com.ecommerce.order.dto.OrderItemDTO;
 import com.ecommerce.order.dto.OrderRequestDTO;
@@ -65,7 +66,11 @@ public class OrderServiceImpl implements OrderService {
 
             // reserve stock
             try {
-                inventoryServiceClient.reserveStock(itemDTO.getProductId(), itemDTO.getQuantity());
+                InventoryResponse response = inventoryServiceClient.reserveStock(itemDTO.getProductId(), itemDTO.getQuantity());
+                if (response == null) {
+                    releaseReservedStockForOrder(reservedItems);
+                    throw new BusinessException("Failed to reserve stock for product: " + itemDTO.getProductId());
+                }
                 reservedItems.add(itemDTO); // track reserved items for potential rollback
             } catch (Exception e) {
                 releaseReservedStockForOrder(reservedItems); // rollback previous reservations
